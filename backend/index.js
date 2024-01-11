@@ -4,6 +4,7 @@ import {exec} from "child_process"
 import mongoose from "mongoose"
 import Trial from "./database.js";
 import timeDifferenceInSeconds from "./calculateDifference.js";
+import generateCsv from "./generateData.js";
 
 const app = express();
 const PORT = process.env.PORT || 8000
@@ -50,6 +51,16 @@ app.get('/end', (req, res) => {
     })
     res.send("end trial");
 });
+
+app.get('/data', async (req, res) => {
+    try {
+        const data = await Trial.find()
+        generateCsv(data)
+    } catch (error) {
+        res.send(error.message)
+    }
+    res.send("here you go with your csv file")
+})
 
 app.listen(PORT, () => {
     mongoose.connect(database)
