@@ -20,7 +20,7 @@ height = int(resolution[1])
 picam2 = Picamera2()
 picam2.configure(picam2.create_video_configuration())
 picam2.color_effects = (128,128)
-duration = int(input("How long do you want the video to run ? "))
+# duration = int(input("How long do you want the video to run ? "))
 
 colour = (0, 255, 0)
 origin = (0, 30)
@@ -55,8 +55,20 @@ picam2.pre_callback = apply_timestamp
 encoder = H264Encoder(10000000)
 output = FfmpegOutput('test.mp4')
 
-picam2.start_recording(encoder, output, quality=Quality.HIGH)
-time.sleep(duration)
-picam2.stop_recording()
+try:
+    picam2.start_recording(encoder, output, quality=Quality.HIGH)
+    while True:
+        time.sleep(1)  # Sleep for 1 second, adjust as needed
+except KeyboardInterrupt:
+    # Stop recording when KeyboardInterrupt (Ctrl+C) is detected
+    picam2.stop_recording()
+    print("Recording stopped.")
+
+# Close the camera connection
+picam2.close()
+
+# picam2.start_recording(encoder, output, quality=Quality.HIGH)
+# time.sleep(duration)
+# picam2.stop_recording()
 
 
