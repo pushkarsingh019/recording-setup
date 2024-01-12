@@ -48,7 +48,8 @@ output_folder = "recordings"
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
-output_file = os.path.join(output_folder, f"video_{time.strftime('%d_%b_%Y_time_%H_%M')}.mp4")
+timestamp = time.strftime('%d_%b_%Y_time_%H_%M')
+output_file = os.path.join(output_folder, f"video_{timestamp}.mp4")
 encoder = H264Encoder(10000000)
 output = FfmpegOutput(output_file)
 
