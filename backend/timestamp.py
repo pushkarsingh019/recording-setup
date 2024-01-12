@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 import time
-import locale
+import os
 import cv2
 import re
 import subprocess
-import os
 
 from picamera2 import MappedArray, Picamera2, Preview
 from picamera2.encoders import H264Encoder, Quality
@@ -17,11 +16,9 @@ resolution = re.search(r'^mode "(\d+)x(\d+)"$', result.stdout, re.MULTILINE).gro
 width = int(resolution[0])
 height = int(resolution[1])
 
-
 picam2 = Picamera2()
 picam2.configure(picam2.create_video_configuration())
-picam2.color_effects = (128,128)
-# duration = int(input("How long do you want the video to run ? "))
+picam2.color_effects = (128, 128)
 
 colour = (0, 255, 0)
 origin = (0, 30)
@@ -30,14 +27,9 @@ scale = 1
 thickness = 2
 safe_boundary = 100
 
-picam2.start_preview(Preview.QTGL, x=0, y=0, width=(width - safe_boundary), height=(height - safe_boundary), transform=Transform(hflip=1, vflip=1))
-
-
-
-# def apply_timestamp(request):
-#     timestamp = time.strftime("%Y-%m-%d %X", time.localtime())
-#     with MappedArray(request, "main") as m:
-#         cv2.putText(m.array, timestamp, origin, font, scale, colour, thickness)
+picam2.start_preview(
+    Preview.QTGL, x=0, y=0, width=(width - safe_boundary), height=(height - safe_boundary), transform=Transform(hflip=1, vflip=1)
+)
 
 def apply_timestamp(request):
     timestamp = time.strftime("%Y-%m-%d %X", time.localtime())
@@ -50,16 +42,14 @@ def apply_timestamp(request):
 
         cv2.putText(m.array, timestamp, origin, font, scale, colour, thickness)
 
-
 picam2.pre_callback = apply_timestamp
 
 output_folder = "recordings"
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
-timestamp = time.strftime('%d/%b/%Y/_time_%H:%M')
+timestamp = time.strftime('%d_%b_%Y_time_%H_%M')
 output_file = os.path.join(output_folder, f"video_{timestamp}.mp4")
-
 encoder = H264Encoder(10000000)
 output = FfmpegOutput(output_file)
 
@@ -74,9 +64,3 @@ except KeyboardInterrupt:
 
 # Close the camera connection
 picam2.close()
-
-# picam2.start_recording(encoder, output, quality=Quality.HIGH)
-# time.sleep(duration)
-# picam2.stop_recording()
-
-
