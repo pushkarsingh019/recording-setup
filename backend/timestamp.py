@@ -48,8 +48,15 @@ output_folder = "recordings"
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
-timestamp = time.strftime('%d_%b_%Y_time_%H_%M')
-output_file = os.path.join(output_folder, f"video_{timestamp}.mp4")
+timestamp = time.strftime('%d-%b-%Y_time_%H-%M')
+index = 1
+output_file = os.path.join(output_folder, f"video_{timestamp}_{index}.mp4")
+
+# Find a unique file name
+while os.path.exists(output_file):
+    index += 1
+    output_file = os.path.join(output_folder, f"video_{timestamp}_{index}.mp4")
+
 encoder = H264Encoder(10000000)
 output = FfmpegOutput(output_file)
 
