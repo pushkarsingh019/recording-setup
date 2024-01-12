@@ -61,7 +61,7 @@ timestamp = time.strftime('%d/%b/%Y/_time_%H:%M')
 output_file = os.path.join(output_folder, f"video_{timestamp}.mp4")
 
 encoder = H264Encoder(10000000)
-output = FfmpegOutput('test.mp4')
+output = FfmpegOutput(output_file)
 
 try:
     picam2.start_recording(encoder, output, quality=Quality.HIGH)
