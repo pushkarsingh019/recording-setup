@@ -62,6 +62,20 @@ app.get('/data', async (req, res) => {
     res.send("here you go with your csv file")
 })
 
+app.get('/stop', (req, res) => {
+    exec(`./stop_camera.sh`, (error, stdout, stderr) => {
+        if (error) {
+            console.log(error.message);
+            res.send("Error stopping picamera2 script");
+        }
+        if (stderr) {
+            console.log(`stderr ${stderr}`);
+            res.send("Error stopping picamera2 script");
+        }
+        res.send("Stopping picamera2 script...");
+    });
+});
+
 app.listen(PORT, () => {
     mongoose.connect(database)
     .then(() => console.log("database connected..."))
