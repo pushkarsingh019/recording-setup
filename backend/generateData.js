@@ -28,7 +28,7 @@ async function generateCsv(data) {
     console.log(`CSV file created successfully: ${filePath}`);
     
     // Clear database after writing to CSV
-    await Trial.deleteMany({}); 
+    // await Trial.deleteMany({}); 
 
   } catch (error) {
     console.error('Error writing CSV:', error);
