@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/start', (req, res) => {
-    exec(`python3 time.py`, (error, stdout, stderr) => {
+    exec(`python time.py`, (error, stdout, stderr) => {
         if(error){
             console.log(error.message);
         }
@@ -32,7 +32,7 @@ app.get('/start', (req, res) => {
 });
 
 app.get('/end', (req, res) => {
-    exec(`python3 time.py`, (error, stdout, stderr) => {
+    exec(`python time.py`, (error, stdout, stderr) => {
         if(error){
             console.log(error.message);
         }
