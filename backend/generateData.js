@@ -12,9 +12,13 @@ const filePath = path.join(dataFolderPath, 'final_data.csv');
 const csvWriter = createObjectCsvWriter({
   path: filePath,
   header: [
+    {id : "stimulus" , title : "Stimulus"},
+    {id : "side", title : "Side"},
     {id: 'startTiming', title: 'Start Timing'},
     {id: 'endTiming', title: 'End Timing'}, 
-    {id: 'reactionTime', title: 'Reaction Time'}
+    {id: 'reactionTime', title: 'Reaction Time (seconds)'},
+    {id : "detection", title : "detection"},
+    {id : "signalProperty", title : "Signal"}
   ]
 });
 
