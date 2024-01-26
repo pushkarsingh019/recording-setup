@@ -43,6 +43,8 @@ const getSignal = (stimulus, detection) => {
         return "miss"
     } else if (stimulus === "negative" && detection === "wrong detection"){
         return "correct rejection"
+    } else if (detection === "null"){
+        return "null"
     } else {
         return "error"
     }
@@ -135,12 +137,15 @@ app.get('/detection/:detect', (req, res) => {
     const {detect} = req.params
     // 0 -> wrong detection
     // 1 -> correct detection
+    // 2 -> no detection
     if (detect == 0) {
         trial.detection = "wrong detection"
     } else if (detect == 1){
         trial.detection = "correct detection"
+    } else if (detect == 2) {
+        trial.detection = "null"
     } else {
-        console.log("wrong option")
+        console.log("wrong detection option")
     }
     let signalProperty = getSignal(trial.stimulus, trial.detection);
     trial.signalProperty = signalProperty;
