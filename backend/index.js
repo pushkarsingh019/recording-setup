@@ -54,12 +54,22 @@ const getSignal = (stimulus, detection) => {
 const sendEmail = async () => {
     const host = "https://recording-setup-production.up.railway.app//";
     let link = host + "data"
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await resend.batch.send([{
         from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-        to: ["pushkars423@gmail.com, vanshika.m@ahduni.edu.in, sridharshiny.k@ahduni.edu.in"],
+        to: ["pushkars423@gmail.com"],
         subject: "Here is your data...",
         html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
-      });
+      }, {
+        from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
+        to: ["vanshika.m@ahduni.edu.in"],
+        subject: "Here is your data...",
+        html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
+      }, {
+        from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
+        to: ["sridharshiny.k@ahduni.edu.in"],
+        subject: "Here is your data...",
+        html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
+      }]);
     
       if (error) {
         console.log(error.message)
