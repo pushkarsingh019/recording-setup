@@ -7,7 +7,6 @@ import timeDifferenceInSeconds from "./calculateDifference.js";
 import generateCsv from "./generateData.js";
 import {Resend} from "resend";import fs from "fs/promises"
 import getCurrentTime from "./time.js";
-import { chown } from "fs";
 
 const app = express();
 const PORT = process.env.PORT || 8000
@@ -53,15 +52,13 @@ const getSignal = (stimulus, detection) => {
 };
 
 const sendEmail = async () => {
+    const host = "loud-bell-testing.up.railway.app/";
+    let link = host + "data"
     const { data, error } = await resend.emails.send({
         from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
         to: ["pushkars423@gmail.com"],
-        subject: "Here is your data",
-        attachments :[{
-            filename : "data",
-            path : "https://loud-bell-testing.up.railway.app/data"
-    }],
-        html: "<strong>Here is your data</strong>",
+        subject: "Here is your data...",
+        html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
       });
     
       if (error) {
@@ -161,6 +158,33 @@ app.get('/detection/:detect', (req, res) => {
     trial = {}
     res.send("done");
 });
+
+// app.get('/data', async (req, res) => {
+//     try {
+//         // Send a response to the client indicating the data is being prepared
+//         res.send('Your data is being prepared for download...');
+
+//         // Wait for a short time (simulate data preparation delay)
+//         await new Promise(resolve => setTimeout(resolve, 2000));
+
+//         // Fetch data and generate CSV
+//         const data = await Trial.find();
+//         const filePath = await generateCsv(data);
+
+//         // Sending the file for download
+//         res.download(filePath, 'final_data.csv', (err) => {
+//             if (err) {
+//                 // Handle download error
+//                 res.status(500).send('Error downloading file');
+//             } else {
+//                 console.log('File sent:', 'final_data.csv');
+//             }
+//         });
+//     } catch (error) {
+//         // Handle any other errors during the process
+//         res.status(500).send(error.message);
+//     }
+// });
 
 app.get('/data', async (req, res) => {
     try {
