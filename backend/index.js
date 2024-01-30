@@ -6,6 +6,7 @@ import Trial from "./database.js";
 import timeDifferenceInSeconds from "./calculateDifference.js";
 import generateCsv from "./generateData.js";
 import {Resend} from "resend";import fs from "fs/promises"
+import getCurrentTime from "./time.js";
 
 const app = express();
 const PORT = process.env.PORT || 8000
@@ -51,15 +52,13 @@ const getSignal = (stimulus, detection) => {
 };
 
 const sendEmail = async () => {
+    const host = "https://recording-setup-production.up.railway.app//";
+    let link = host + "data"
     const { data, error } = await resend.emails.send({
         from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-        to: ["pushkars423@gmail.com"],
-        subject: "Here is your data",
-        attachments :[{
-            content : dataBuffer,
-            filename : "data"
-    }],
-        html: "<strong>it works!</strong>",
+        to: ["pushkars423@gmail.com, vanshika.m@ahduni.edu.in, sridharshiny.k@ahduni.edu.in"],
+        subject: "Here is your data...",
+        html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
       });
     
       if (error) {
@@ -68,7 +67,7 @@ const sendEmail = async () => {
 }
 
 app.get('/', (req, res) => {
-    // sendEmail()
+    sendEmail()
     res.send("The recording setup.")
 });
 
@@ -100,31 +99,36 @@ app.get('/side/:side', (req, res) => {
 })
 
 app.get('/start', (req, res) => {
-    exec(`python3 time.py`, (error, stdout, stderr) => {
-        if(error){
-            console.log(error.message);
-        }
-        if(stderr){
-            console.log(`stderr ${stderr}`)
-        }
-        // console.log(stdout)
-        trial.startTiming = stdout
-    })
+    // exec(`python3 time.py`, (error, stdout, stderr) => {
+    //     if(error){
+    //         console.log(error.message);
+    //     }
+    //     if(stderr){
+    //         console.log(`stderr ${stderr}`)
+    //     }
+    //     // console.log(stdout)
+    //     trial.startTiming = stdout
+    // })
+    const startTime = getCurrentTime();
+    trial.startTiming = startTime;
     res.send("starting trial");
 });
 
 app.get('/end', async (req, res) => {
-    exec(`python3 time.py`, (error, stdout, stderr) => {
-        if(error){
-            console.log(error.message);
-        }
-        if(stderr){
-            console.log(`stderr ${stderr}`)
-        }
-        trial.endTiming = stdout
-        const timeDifference = timeDifferenceInSeconds(trial.startTiming, trial.endTiming);
-        trial.reactionTime = timeDifference;
-    });
+    // exec(`python3 time.py`, (error, stdout, stderr) => {
+    //     if(error){
+    //         console.log(error.message);
+    //     }
+    //     if(stderr){
+    //         console.log(`stderr ${stderr}`)
+    //     }
+    //     trial.endTiming = stdout
+        
+    // });
+    const endTiming = getCurrentTime();
+    trial.endTiming  = endTiming;
+    const timeDifference = timeDifferenceInSeconds(trial.startTiming, trial.endTiming);
+    trial.reactionTime = timeDifference;
     res.send("Got the end trial details....");
 });
 
@@ -149,19 +153,29 @@ app.get('/detection/:detect', (req, res) => {
     }
     let signalProperty = getSignal(trial.stimulus, trial.detection);
     trial.signalProperty = signalProperty;
+    console.log(trial);
     createNewTrialData()
+    trial = {}
     res.send("done");
 });
 
 app.get('/data', async (req, res) => {
     try {
         const data = await Trial.find()
-        generateCsv(data)
+        const filePath = await generateCsv(data);
+
+        // Sending the file for download
+        res.download(filePath, 'final_data.csv', (err) => {
+            if (err) {
+                res.status(404).send('File not found');
+            } else {
+                console.log('File sent:', 'final_data.csv');
+            }
+        });
     } catch (error) {
-        res.send(error.message)
+        res.status(500).send(error.message);
     }
-    res.send("here you go with your csv file")
-})
+});
 
 app.get('/stop', (req, res) => {
     exec(`./stop_camera.sh`, (error, stdout, stderr) => {
