@@ -52,7 +52,7 @@ const getSignal = (stimulus, detection) => {
 };
 
 const sendEmail = async () => {
-    const host = "https://recording-setup-production.up.railway.app//";
+    const host = "https://recording-setup-production.up.railway.app/";
     let link = host + "data"
     const { data, error } = await resend.batch.send([{
         from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
