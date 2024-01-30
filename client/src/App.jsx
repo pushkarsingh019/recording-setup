@@ -4,7 +4,7 @@ import { toast, Toaster } from "react-hot-toast";
 
 
 function App() {
-    const backendUrl = "http://localhost:8000";
+    const backendUrl = "https://recording-setup-production.up.railway.app";
     const [trialSate, setTrialState] = useState(false);
     const [trialStage, setTrialStage] = useState(0);
     let timeout;

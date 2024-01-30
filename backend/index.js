@@ -12,8 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 8000
 app.use(cors())
 app.use(express.json())
-// const database = "mongodb+srv://pushkar:fishrecording@cluster0.lz5tvs5.mongodb.net/recording"
-const database = "mongodb+srv://pushkar:pushkar@cluster0.jurgdiv.mongodb.net/test"
+const database = "mongodb+srv://pushkar:fishrecording@cluster0.lz5tvs5.mongodb.net/recording"
+// const database = "mongodb+srv://pushkar:pushkar@cluster0.jurgdiv.mongodb.net/test"
 let trial = {}
 const resend = new Resend("re_PhfK19tv_NMR9oecUvtgxu97z7PNwWEa6")
 
@@ -52,11 +52,11 @@ const getSignal = (stimulus, detection) => {
 };
 
 const sendEmail = async () => {
-    const host = "loud-bell-testing.up.railway.app/";
+    const host = "https://recording-setup-production.up.railway.app//";
     let link = host + "data"
     const { data, error } = await resend.emails.send({
         from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-        to: ["pushkars423@gmail.com"],
+        to: ["pushkars423@gmail.com, vanshika.m@ahduni.edu.in, sridharshiny.k@ahduni.edu.in"],
         subject: "Here is your data...",
         html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
       });
@@ -159,33 +159,6 @@ app.get('/detection/:detect', (req, res) => {
     res.send("done");
 });
 
-// app.get('/data', async (req, res) => {
-//     try {
-//         // Send a response to the client indicating the data is being prepared
-//         res.send('Your data is being prepared for download...');
-
-//         // Wait for a short time (simulate data preparation delay)
-//         await new Promise(resolve => setTimeout(resolve, 2000));
-
-//         // Fetch data and generate CSV
-//         const data = await Trial.find();
-//         const filePath = await generateCsv(data);
-
-//         // Sending the file for download
-//         res.download(filePath, 'final_data.csv', (err) => {
-//             if (err) {
-//                 // Handle download error
-//                 res.status(500).send('Error downloading file');
-//             } else {
-//                 console.log('File sent:', 'final_data.csv');
-//             }
-//         });
-//     } catch (error) {
-//         // Handle any other errors during the process
-//         res.status(500).send(error.message);
-//     }
-// });
-
 app.get('/data', async (req, res) => {
     try {
         const data = await Trial.find()
@@ -203,17 +176,6 @@ app.get('/data', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
-
-// app.get('/data', async (req, res) => {
-//     try {
-//         const data = await Trial.find()
-//         const filePath = generateCsv(data)
-//     } catch (error) {
-//         res.send(error.message)
-//     }
-//     res.send("here you go with your csv file")
-// })
 
 app.get('/stop', (req, res) => {
     exec(`./stop_camera.sh`, (error, stdout, stderr) => {
