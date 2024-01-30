@@ -6,13 +6,15 @@ import Trial from "./database.js";
 import timeDifferenceInSeconds from "./calculateDifference.js";
 import generateCsv from "./generateData.js";
 import {Resend} from "resend";import fs from "fs/promises"
+import getCurrentTime from "./time.js";
+import { chown } from "fs";
 
 const app = express();
 const PORT = process.env.PORT || 8000
 app.use(cors())
 app.use(express.json())
-const database = "mongodb+srv://pushkar:fishrecording@cluster0.lz5tvs5.mongodb.net/recording"
-// const database = "mongodb+srv://pushkar:pushkar@cluster0.jurgdiv.mongodb.net/test"
+// const database = "mongodb+srv://pushkar:fishrecording@cluster0.lz5tvs5.mongodb.net/recording"
+const database = "mongodb+srv://pushkar:pushkar@cluster0.jurgdiv.mongodb.net/test"
 let trial = {}
 const resend = new Resend("re_PhfK19tv_NMR9oecUvtgxu97z7PNwWEa6")
 
@@ -100,31 +102,36 @@ app.get('/side/:side', (req, res) => {
 })
 
 app.get('/start', (req, res) => {
-    exec(`python3 time.py`, (error, stdout, stderr) => {
-        if(error){
-            console.log(error.message);
-        }
-        if(stderr){
-            console.log(`stderr ${stderr}`)
-        }
-        // console.log(stdout)
-        trial.startTiming = stdout
-    })
+    // exec(`python3 time.py`, (error, stdout, stderr) => {
+    //     if(error){
+    //         console.log(error.message);
+    //     }
+    //     if(stderr){
+    //         console.log(`stderr ${stderr}`)
+    //     }
+    //     // console.log(stdout)
+    //     trial.startTiming = stdout
+    // })
+    const startTime = getCurrentTime();
+    trial.startTiming = startTime;
     res.send("starting trial");
 });
 
 app.get('/end', async (req, res) => {
-    exec(`python3 time.py`, (error, stdout, stderr) => {
-        if(error){
-            console.log(error.message);
-        }
-        if(stderr){
-            console.log(`stderr ${stderr}`)
-        }
-        trial.endTiming = stdout
-        const timeDifference = timeDifferenceInSeconds(trial.startTiming, trial.endTiming);
-        trial.reactionTime = timeDifference;
-    });
+    // exec(`python3 time.py`, (error, stdout, stderr) => {
+    //     if(error){
+    //         console.log(error.message);
+    //     }
+    //     if(stderr){
+    //         console.log(`stderr ${stderr}`)
+    //     }
+    //     trial.endTiming = stdout
+        
+    // });
+    const endTiming = getCurrentTime();
+    trial.endTiming  = endTiming;
+    const timeDifference = timeDifferenceInSeconds(trial.startTiming, trial.endTiming);
+    trial.reactionTime = timeDifference;
     res.send("Got the end trial details....");
 });
 
@@ -149,19 +156,40 @@ app.get('/detection/:detect', (req, res) => {
     }
     let signalProperty = getSignal(trial.stimulus, trial.detection);
     trial.signalProperty = signalProperty;
+    console.log(trial);
     createNewTrialData()
+    trial = {}
     res.send("done");
 });
 
 app.get('/data', async (req, res) => {
     try {
         const data = await Trial.find()
-        generateCsv(data)
+        const filePath = await generateCsv(data);
+
+        // Sending the file for download
+        res.download(filePath, 'final_data.csv', (err) => {
+            if (err) {
+                res.status(404).send('File not found');
+            } else {
+                console.log('File sent:', 'final_data.csv');
+            }
+        });
     } catch (error) {
-        res.send(error.message)
+        res.status(500).send(error.message);
     }
-    res.send("here you go with your csv file")
-})
+});
+
+
+// app.get('/data', async (req, res) => {
+//     try {
+//         const data = await Trial.find()
+//         const filePath = generateCsv(data)
+//     } catch (error) {
+//         res.send(error.message)
+//     }
+//     res.send("here you go with your csv file")
+// })
 
 app.get('/stop', (req, res) => {
     exec(`./stop_camera.sh`, (error, stdout, stderr) => {
