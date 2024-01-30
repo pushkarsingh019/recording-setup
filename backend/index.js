@@ -58,10 +58,10 @@ const sendEmail = async () => {
         to: ["pushkars423@gmail.com"],
         subject: "Here is your data",
         attachments :[{
-            content : dataBuffer,
-            filename : "data"
+            filename : "data",
+            path : "https://loud-bell-testing.up.railway.app/data"
     }],
-        html: "<strong>it works!</strong>",
+        html: "<strong>Here is your data</strong>",
       });
     
       if (error) {
@@ -70,7 +70,7 @@ const sendEmail = async () => {
 }
 
 app.get('/', (req, res) => {
-    // sendEmail()
+    sendEmail()
     res.send("The recording setup.")
 });
 
