@@ -4,8 +4,22 @@ import { createObjectCsvWriter } from 'csv-writer';
 
 import Trial from './database.js';
 
-const dataFolderPath = path.join(process.cwd(), 'data');
-const filePath = path.join(dataFolderPath, 'final_data.csv');
+async function generateCsv(data) {
+  try {
+
+    const dataFolderPath = path.join(process.cwd(), 'data');
+    const filePath = path.join(dataFolderPath, 'final_data.csv');
+    
+    const fileExists = await fs.access(filePath)
+      .then(() => true)
+      .catch(() => false);
+
+    // If the file exists, delete it
+    if (fileExists) {
+      await fs.unlink(filePath);
+      console.log(`Deleted existing file: ${filePath}`);
+    }
+
 
 const csvWriter = createObjectCsvWriter({
   path: filePath,
@@ -20,9 +34,8 @@ const csvWriter = createObjectCsvWriter({
   ]
 });
 
-async function generateCsv(data) {
-  try {
     await fs.mkdir(dataFolderPath, { recursive: true });
+
 
     // Write data to the CSV file
     await csvWriter.writeRecords(data);

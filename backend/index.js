@@ -5,8 +5,8 @@ import mongoose from "mongoose"
 import Trial from "./database.js";
 import timeDifferenceInSeconds from "./calculateDifference.js";
 import generateCsv from "./generateData.js";
-import {Resend} from "resend";import fs from "fs/promises"
-import getCurrentTime from "./time.js";
+import {Resend} from "resend";
+import getTrialData from "./getTrialData.js";
 
 const app = express();
 const PORT = process.env.PORT || 8000
@@ -77,68 +77,49 @@ const sendEmail = async () => {
 }
 
 app.get('/', (req, res) => {
-    sendEmail()
+    // sendEmail()
     res.send("The recording setup.")
 });
 
-app.get('/stimulus/:stimuli', (req, res) => {
-    const {stimuli} = req.params
-    if(stimuli == 0){
-        trial.stimulus = "negative"
-    } else if(stimuli == 1){
-        trial.stimulus = "positive"
-    }
-    else {
-        console.log("option not recognised")
-    }
-    res.send(trial)
+app.get('/trialData', (req, res) => {
+    trial = {}
+    const trialData = getTrialData();
+    trial.stimulus = trialData.stimulus;
+    trial.side = trialData.side;
+    res.send(trialData);
 });
 
-app.get('/side/:side', (req, res) => {
-    const {side} = req.params;
-    // 0 -> left side
-    // 1 -> right side
-    if (side == 0) {
-        trial.side = "left"
-    } else if (side == 1){
-        trial.side = "right"
-    } else {
-        console.log("wrong option")
-    }
-    res.send(trial)
-})
-
 app.get('/start', (req, res) => {
-    // exec(`python3 time.py`, (error, stdout, stderr) => {
-    //     if(error){
-    //         console.log(error.message);
-    //     }
-    //     if(stderr){
-    //         console.log(`stderr ${stderr}`)
-    //     }
-    //     // console.log(stdout)
-    //     trial.startTiming = stdout
-    // })
-    const startTime = getCurrentTime();
-    trial.startTiming = startTime;
+    exec(`python3 time.py`, (error, stdout, stderr) => {
+        if(error){
+            console.log(error.message);
+        }
+        if(stderr){
+            console.log(`stderr ${stderr}`)
+        }
+        // console.log(stdout)
+        trial.startTiming = stdout
+    })
+    // const startTime = getCurrentTime();
+    // trial.startTiming = startTime;
     res.send("starting trial");
 });
 
 app.get('/end', async (req, res) => {
-    // exec(`python3 time.py`, (error, stdout, stderr) => {
-    //     if(error){
-    //         console.log(error.message);
-    //     }
-    //     if(stderr){
-    //         console.log(`stderr ${stderr}`)
-    //     }
-    //     trial.endTiming = stdout
-        
-    // });
-    const endTiming = getCurrentTime();
-    trial.endTiming  = endTiming;
-    const timeDifference = timeDifferenceInSeconds(trial.startTiming, trial.endTiming);
-    trial.reactionTime = timeDifference;
+    exec(`python3 time.py`, (error, stdout, stderr) => {
+        if(error){
+            console.log(error.message);
+        }
+        if(stderr){
+            console.log(`stderr ${stderr}`)
+        }
+        trial.endTiming = stdout
+        const timeDifference = timeDifferenceInSeconds(trial.startTiming, trial.endTiming);
+        trial.reactionTime = timeDifference;
+    });
+    // const endTiming = getCurrentTime();
+    // trial.endTiming  = endTiming;
+    // console.log("start timing - end timing ", trial.startTiming, trial.endTiming)
     res.send("Got the end trial details....");
 });
 
@@ -163,9 +144,7 @@ app.get('/detection/:detect', (req, res) => {
     }
     let signalProperty = getSignal(trial.stimulus, trial.detection);
     trial.signalProperty = signalProperty;
-    console.log(trial);
     createNewTrialData()
-    trial = {}
     res.send("done");
 });
 
