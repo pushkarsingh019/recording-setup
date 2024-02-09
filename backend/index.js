@@ -15,10 +15,12 @@ app.use(express.json())
 const database = "mongodb+srv://pushkar:fishrecording@cluster0.lz5tvs5.mongodb.net/recording"
 // const database = "mongodb+srv://pushkar:pushkar@cluster0.jurgdiv.mongodb.net/test"
 let trial = {}
+let fish;
 const resend = new Resend("re_PhfK19tv_NMR9oecUvtgxu97z7PNwWEa6")
 
 const createNewTrialData = async () => {
     const trialData = new Trial({
+        fish : trial.fish,
         stimulus : trial.stimulus,
         side : trial.side,
         startTiming : trial.startTiming,
@@ -52,7 +54,7 @@ const getSignal = (stimulus, detection) => {
 };
 
 const sendEmail = async () => {
-    const host = "https://recording-setup-production.up.railway.app/";
+    const host = "https://elfish.stoicpushkar.com/";
     let link = host + "data"
     const { data, error } = await resend.batch.send([{
         from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
@@ -81,8 +83,14 @@ app.get('/', (req, res) => {
     res.send("The recording setup.")
 });
 
+app.get('/fishNumber/:fishNumber', (req,res) => {
+    const {fishNumber} = req.params;
+    fish = fishNumber;
+    res.send(fish);
+});
+
 app.get('/trialData', (req, res) => {
-    trial = {}
+    trial = {fish : fish}
     const trialData = getTrialData();
     trial.stimulus = trialData.stimulus;
     trial.side = trialData.side;

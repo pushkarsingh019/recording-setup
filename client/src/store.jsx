@@ -10,6 +10,13 @@ export const ContextProvider = ({children}) => {
 
     const store = {
         trialData : trialData,
+        setFish : async (fishNumber) => {
+            try {
+                await axios.get(`${backendUrl}/fishNumber/${fishNumber}`)
+            } catch (error) {
+                console.log(error.message)
+            }
+        },
         getTrialInfo : async () => {
             try {
                 const {data} = await axios.get(`${backendUrl}/trialData`);

@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 
 const trialSchema = new mongoose.Schema({
+    fish : String,
     stimulus : String,
     side : String,
     startTiming : String,
