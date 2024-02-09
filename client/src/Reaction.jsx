@@ -9,7 +9,7 @@ const Reaction = () => {
     const detectionHandler = async (detect) => {
         console.log("detection handler")
         await detection(detect);
-        navigate('/');
+        navigate('/start');
     };
 
     useEffect(() => {

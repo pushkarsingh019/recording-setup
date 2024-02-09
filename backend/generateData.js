@@ -24,6 +24,7 @@ async function generateCsv(data) {
 const csvWriter = createObjectCsvWriter({
   path: filePath,
   header: [
+    {id : "fish", title : "fish"},
     { id: 'stimulus', title: 'Stimulus' },
     { id: 'side', title: 'Side' },
     { id: 'startTiming', title: 'Start Timing' },
