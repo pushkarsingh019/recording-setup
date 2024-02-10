@@ -7,9 +7,12 @@ export const storeContext = createContext();
 export const ContextProvider = ({children}) => {
     const backendUrl = "http://localhost:8000";
     const [trialData, setTrialData] = useState();
+    const [isTrialRunning, setIsTrialRunning] = useState(false);
 
     const store = {
         trialData : trialData,
+        isTrialRunning : isTrialRunning,
+        changeTrialState : state => setIsTrialRunning(state),
         setFish : async (fishNumber) => {
             try {
                 await axios.get(`${backendUrl}/fishNumber/${fishNumber}`)
@@ -27,6 +30,7 @@ export const ContextProvider = ({children}) => {
         },
         startTrial : async () => {
             console.log("starting trial...");
+            isTrialRunning ? toast.error("trial is already running") : ""
             try {
                 await axios.get(`${backendUrl}/start`);
                 toast.success("trial started");
