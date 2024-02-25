@@ -4,7 +4,6 @@ import { storeContext } from "./store";
 
 const Start = () => {
   const {
-    changeTrialState,
     trialData,
     getTrialInfo,
     startTrial,
@@ -12,30 +11,31 @@ const Start = () => {
     discardTrial,
     isTrialRunning,
     trialCount,
+    changeTrialState,
   } = useContext(storeContext);
   const navigate = useNavigate();
 
   // variable to automatically stop trial after delay.
   let timeout;
-  const delay = 60000; // 60 seconds.
+  const toSeconds = 1000;
+  const targetDelay = 60; // enter the time in seconds.
+  const delay = targetDelay * toSeconds;
 
   const startHandler = () => {
     startTrial();
-    changeTrialState(true);
     timeout = setTimeout(endHandler, delay);
   };
 
-  const endHandler = () => {
-    endTrial();
-    changeTrialState(false);
-    clearTimeout(timeout);
-    navigate(`/reaction`);
+  const endHandler = async () => {
+    let moveForward = await endTrial();
+    moveForward ? clearTimeout(timeout) : "";
+    moveForward ? navigate(`/reaction`) : "";
   };
 
   const discardHandler = () => {
     clearTimeout(timeout);
     discardTrial();
-    changeTrialState(False);
+    changeTrialState(false);
   };
 
   useEffect(() => {

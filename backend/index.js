@@ -32,6 +32,7 @@ const createNewTrialData = async () => {
     signalProperty: trial.signalProperty,
   });
   try {
+    console.log(trialData);
     await trialData.save();
     trial = {};
   } catch (error) {
@@ -40,13 +41,13 @@ const createNewTrialData = async () => {
 };
 
 const getSignal = (stimulus, detection) => {
-  if (stimulus === "positive" && detection === "correct detection") {
+  if (stimulus === "positive" && detection === "Detection") {
     return "hit";
-  } else if (stimulus === "negative" && detection === "correct detection") {
+  } else if (stimulus === "negative" && detection === "Detection") {
     return "false alarm";
-  } else if (stimulus === "positive" && detection === "wrong detection") {
+  } else if (stimulus === "positive" && detection === "No Detection") {
     return "miss";
-  } else if (stimulus === "negative" && detection === "wrong detection") {
+  } else if (stimulus === "negative" && detection === "No Detection") {
     return "correct rejection";
   } else if (detection === "null") {
     return "null";
@@ -151,9 +152,9 @@ app.get("/detection/:detect", (req, res) => {
   // 1 -> correct detection
   // 2 -> no detection
   if (detect == 0) {
-    trial.detection = "wrong detection";
+    trial.detection = "No Detection";
   } else if (detect == 1) {
-    trial.detection = "correct detection";
+    trial.detection = "Detection";
   } else if (detect == 2) {
     trial.detection = "null";
   } else {

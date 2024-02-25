@@ -7,7 +7,7 @@ const conditions = [
 ];
 
 // Shuffle conditions randomly
-const shuffledConditions = shuffle(conditions);
+let shuffledConditions = shuffle(conditions);
 
 // Function to shuffle array
 function shuffle(array) {
