@@ -57,7 +57,8 @@ while os.path.exists(output_file):
     index += 1
     output_file = os.path.join(output_folder, f"video_{timestamp}_{index}.mp4")
 
-encoder = H264Encoder(10000000)
+# encoder = H264Encoder(10000000)
+encoder = H264Encoder();
 output = FfmpegOutput(output_file)
 
 try:
