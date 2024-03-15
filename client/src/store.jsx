@@ -25,6 +25,13 @@ export const ContextProvider = ({ children }) => {
         console.log(error.message);
       }
     },
+    setDistance : async (stimuliDistance) => {
+      try{
+        await axios.get(`${backendUrl}/distance/${stimuliDistance}`);
+      } catch (error) {
+        console.log(error.message)
+      }
+    },
     getTrialInfo: async () => {
       try {
         const { data } = await axios.get(`${backendUrl}/trialData`);

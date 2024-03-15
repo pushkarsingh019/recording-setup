@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [fishNumber, setFishNumber] = useState();
-  const { setFish } = useContext(storeContext);
+  const [d, setD] = useState(); // using weird variable name since setDistance is already taken.
+  const { setFish, setDistance } = useContext(storeContext);
   const navigate = useNavigate();
 
   const clickHandler = async () => {
     await setFish(fishNumber);
+    await setDistance(d);
     navigate("/start");
   };
 
@@ -24,6 +26,12 @@ const Home = () => {
           placeholder="Fish Number"
           type="Number"
           onChange={(event) => setFishNumber(event.target.value)}
+        />
+        <input className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" 
+          id="number"
+          placeholder="Distance"
+          type="Number"
+          onChange={event => setD(event.target.value)}
         />
       </div>
       <br />

@@ -1,9 +1,7 @@
 // Create array of conditions
 const conditions = [
-  { stimulus: "positive", side: "left" },
-  { stimulus: "positive", side: "right" },
-  { stimulus: "negative", side: "right" },
-  { stimulus: "negative", side: "left" },
+  { side: "left" },
+  { side: "right" },
 ];
 
 // Shuffle conditions randomly

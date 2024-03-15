@@ -13,9 +13,9 @@ const Reaction = () => {
 
   useEffect(() => {
     const handleKeydown = (e) => {
-      if (e.key === "y") {
+      if (e.key === "w") {
         detectionHandler(1);
-      } else if (e.key === "n") {
+      } else if (e.key === "c") {
         detectionHandler(0);
       } else if (e.key === "m") {
         detectionHandler(2);
@@ -37,13 +37,13 @@ const Reaction = () => {
         className="mb-2 me-2 rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
         onClick={() => detectionHandler(1)}
       >
-        Yes (y)
+        Correct Detection (c)
       </button>
       <button
         className="mb-2 me-2 rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
         onClick={() => detectionHandler(0)}
       >
-        No (n)
+        Wrong Detection (w)
       </button>
       <button
         className="mb-2 me-2 rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"

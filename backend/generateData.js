@@ -25,13 +25,12 @@ const csvWriter = createObjectCsvWriter({
   path: filePath,
   header: [
     {id : "fish", title : "fish"},
-    { id: 'stimulus', title: 'Stimulus' },
+    { id: 'distance', title: 'distance' },
     { id: 'side', title: 'Side' },
     { id: 'startTiming', title: 'Start Timing' },
     { id: 'endTiming', title: 'End Timing' },
     { id: 'reactionTime', title: 'Reaction Time (seconds)' },
     { id: 'detection', title: 'Detection' },
-    { id: 'signalProperty', title: 'Signal' }
   ]
 });
 

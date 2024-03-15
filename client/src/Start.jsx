@@ -78,7 +78,6 @@ const Start = () => {
           </span>
         ) : (
           <span className="text-md">
-            <strong>{trialData.stimulus}</strong> stimulus,{" "}
             <strong>{trialData.side}</strong> side
           </span>
         )}

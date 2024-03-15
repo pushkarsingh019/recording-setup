@@ -12,75 +12,27 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
-const database =
-  "mongodb+srv://pushkar:fishrecording@cluster0.lz5tvs5.mongodb.net/recording";
-// const database =
-//   "mongodb+srv://pushkar:pushkar@cluster0.jurgdiv.mongodb.net/test";
+const database = "mongodb+srv://pushkars:akash-data@akash.f7x9qwg.mongodb.net/distance-discrimination"
 let trial = {};
 let fish;
+let distance;
 const resend = new Resend("re_PhfK19tv_NMR9oecUvtgxu97z7PNwWEa6");
 
 const createNewTrialData = async () => {
   const trialData = new Trial({
     fish: trial.fish,
-    stimulus: trial.stimulus,
+    distance : trial.distance,
     side: trial.side,
     startTiming: trial.startTiming,
     endTiming: trial.endTiming,
     reactionTime: trial.reactionTime,
     detection: trial.detection,
-    signalProperty: trial.signalProperty,
   });
   try {
     console.log(trialData);
     await trialData.save();
     trial = {};
   } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const getSignal = (stimulus, detection) => {
-  if (stimulus === "positive" && detection === "Detection") {
-    return "hit";
-  } else if (stimulus === "negative" && detection === "Detection") {
-    return "false alarm";
-  } else if (stimulus === "positive" && detection === "No Detection") {
-    return "miss";
-  } else if (stimulus === "negative" && detection === "No Detection") {
-    return "correct rejection";
-  } else if (detection === "null") {
-    return "null";
-  } else {
-    return "error";
-  }
-};
-
-const sendEmail = async () => {
-  const host = "https://elfish.stoicpushkar.com/";
-  let link = host + "data";
-  const { data, error } = await resend.batch.send([
-    {
-      from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-      to: ["pushkars423@gmail.com"],
-      subject: "Here is your data...",
-      html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
-    },
-    {
-      from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-      to: ["vanshika.m@ahduni.edu.in"],
-      subject: "Here is your data...",
-      html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
-    },
-    {
-      from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-      to: ["sridharshiny.k@ahduni.edu.in"],
-      subject: "Here is your data...",
-      html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
-    },
-  ]);
-
-  if (error) {
     console.log(error.message);
   }
 };
@@ -96,8 +48,15 @@ app.get("/fishNumber/:fishNumber", (req, res) => {
   res.send(fish);
 });
 
+app.get("/distance/:stimuliDistance", (req, res) => {
+  const {stimuliDistance} = req.params;
+  distance = stimuliDistance;
+  console.log(distance);
+  res.send(distance);
+})
+
 app.get("/trialData", (req, res) => {
-  trial = { fish: fish };
+  trial = { fish: fish, distance : distance };
   const trialData = getTrialData();
   trial.stimulus = trialData.stimulus;
   trial.side = trialData.side;
@@ -152,16 +111,14 @@ app.get("/detection/:detect", (req, res) => {
   // 1 -> correct detection
   // 2 -> no detection
   if (detect == 0) {
-    trial.detection = "No Detection";
+    trial.detection = "Wrong Detection";
   } else if (detect == 1) {
-    trial.detection = "Detection";
+    trial.detection = "Correct Detection";
   } else if (detect == 2) {
     trial.detection = "null";
   } else {
     console.log("wrong detection option");
   }
-  let signalProperty = getSignal(trial.stimulus, trial.detection);
-  trial.signalProperty = signalProperty;
   createNewTrialData();
   res.send("done");
 });
@@ -172,30 +129,16 @@ app.get("/data", async (req, res) => {
     const filePath = await generateCsv(data);
 
     // Sending the file for download
-    res.download(filePath, "final_data.csv", (err) => {
+    res.download(filePath, "data.csv", (err) => {
       if (err) {
         res.status(404).send("File not found");
       } else {
-        console.log("File sent:", "final_data.csv");
+        console.log("File sent:", "data.csv");
       }
     });
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
-
-app.get("/stop", (req, res) => {
-  exec(`./stop_camera.sh`, (error, stdout, stderr) => {
-    if (error) {
-      console.log(error.message);
-      res.send("Error stopping picamera2 script");
-    }
-    if (stderr) {
-      console.log(`stderr ${stderr}`);
-      res.send("Error stopping picamera2 script");
-    }
-    res.send("Stopping picamera2 script...");
-  });
 });
 
 app.listen(PORT, () => {

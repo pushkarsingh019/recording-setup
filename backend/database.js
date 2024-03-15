@@ -5,7 +5,7 @@ const trialSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  stimulus: {
+  distance: {
     type: String,
     required: true,
   },
@@ -26,10 +26,6 @@ const trialSchema = new mongoose.Schema({
     required: true,
   },
   detection: {
-    type: String,
-    required: true,
-  },
-  signalProperty: {
     type: String,
     required: true,
   },
