@@ -78,7 +78,9 @@ const Start = () => {
           </span>
         ) : (
           <span className="text-md">
-            <strong>{trialData.side}</strong> side
+            <strong>{trialData.distance}</strong> cm
+            <br />
+            <strong> Ball : {trialData.ball}</strong> 
           </span>
         )}
       </p>
