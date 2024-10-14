@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
-const database = "mongodb+srv://pushkars:akash-data@akash.f7x9qwg.mongodb.net/distance-discrimination"
+const database = "mongodb://localhost:27017/sri-data"
 let trial = {};
 let fish;
 let distance;
@@ -22,7 +22,7 @@ const createNewTrialData = async () => {
   const trialData = new Trial({
     fish: trial.fish,
     distance : trial.distance,
-    side: trial.side,
+    ball : trial.ball,
     startTiming: trial.startTiming,
     endTiming: trial.endTiming,
     reactionTime: trial.reactionTime,

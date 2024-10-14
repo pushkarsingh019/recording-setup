@@ -9,9 +9,9 @@ const trialSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  side: {
-    type: String,
-    required: true,
+  ball : {
+    type : String,
+    required : true,
   },
   startTiming: {
     type: String,

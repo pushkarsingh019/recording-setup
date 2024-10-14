@@ -1,7 +1,17 @@
 // Create array of conditions
 const conditions = [
-  { side: "left" },
-  { side: "right" },
+  {distance : 2, ball : 'yes'},
+  {distance : 2, ball : 'no'},
+  {distance : 4, ball : 'yes'},
+  {distance : 4, ball : 'no'},
+  {distance : 6, ball : 'yes'},
+  {distance : 6, ball : 'no'},
+  {distance : 8, ball : 'yes'},
+  {distance : 8, ball : 'no'},
+  {distance : 10, ball : 'yes'},
+  {distance : 10, ball : 'no'},
+  {distance : 12, ball : 'yes'},
+  {distance : 12, ball : 'no'}
 ];
 
 // Shuffle conditions randomly
