@@ -21,7 +21,13 @@ const Start = () => {
   const targetDelay = 60; // enter the time in seconds.
   const delay = targetDelay * toSeconds;
 
+  const getTrialHandler = () => {
+    console.log("Getting Trial Info");
+    getTrialInfo();
+  }
+
   const startHandler = () => {
+    console.log('in the start handler')
     startTrial();
     timeout = setTimeout(endHandler, delay);
   };
@@ -47,8 +53,7 @@ const Start = () => {
       } else if (e.key === "x") {
         discardHandler();
       } else if (e.key === "t") {
-        console.log("Getting Trial Info");
-        getTrialInfo();
+        getTrialHandler()
       }
     };
 
@@ -70,7 +75,7 @@ const Start = () => {
             </i>{" "}
             or{" "}
             <span
-              onClick={() => getTrialInfo()}
+              onClick={() => getTrialHandler()}
               className="cursor-pointer text-blue-600 underline"
             >
               click here
@@ -78,27 +83,24 @@ const Start = () => {
           </span>
         ) : (
           <span className="text-md">
-            <strong>{trialData.stimulus}</strong> stimulus,{" "}
-            <strong>{trialData.side}</strong> side
+            Simulus : <strong>{trialData.stimulus}</strong>{" "},
+            Distance : <strong>{trialData.distance}</strong>cm
           </span>
         )}
       </p>
-      {/* <p>
-                {stimulus !== undefined ? <span><strong>{stimulus}</strong> stimulus, <strong>{side}</strong> side</span> : <i>press <strong>t</strong> to get trial information.</i>}
-            </p> */}
       <br />
       <div className="flex items-center gap-x-10">
         {isTrialRunning === false ? (
           <button
             className="mb-2 me-2 rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-            onClick={startHandler}
+            onClick={() => startHandler()}
           >
             Start Trial (S)
           </button>
         ) : (
           <button
             className="mb-2 me-2 rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-            onClick={endHandler}
+            onClick={() => endHandler() }
           >
             End Trial (E)
           </button>

@@ -26,7 +26,7 @@ const csvWriter = createObjectCsvWriter({
   header: [
     {id : "fish", title : "fish"},
     { id: 'stimulus', title: 'Stimulus' },
-    { id: 'side', title: 'Side' },
+    { id: 'distance', title: 'Distance' },
     { id: 'startTiming', title: 'Start Timing' },
     { id: 'endTiming', title: 'End Timing' },
     { id: 'reactionTime', title: 'Reaction Time (seconds)' },

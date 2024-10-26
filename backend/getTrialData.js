@@ -1,9 +1,17 @@
 // Create array of conditions
 const conditions = [
-  { stimulus: "positive", side: "left" },
-  { stimulus: "positive", side: "right" },
-  { stimulus: "negative", side: "right" },
-  { stimulus: "negative", side: "left" },
+  {distance : 2, stimulus : 'Yes'},
+  {distance : 2, stimulus : 'No'},
+  {distance : 4, stimulus : 'Yes'},
+  {distance : 4, stimulus : 'No'},
+  {distance : 6, stimulus : 'Yes'},
+  {distance : 6, stimulus : 'No'},
+  {distance : 8, stimulus : 'Yes'},
+  {distance : 8, stimulus : 'No'},
+  {distance : 10, stimulus : 'Yes'},
+  {distance : 10, stimulus : 'No'},
+  {distance : 12, stimulus : 'Yes'},
+  {distance : 12, stimulus : 'No'},
 ];
 
 // Shuffle conditions randomly
@@ -32,7 +40,7 @@ const getTrialData = () => {
     // Reshuffle occasionally
     shuffledConditions = shuffle(conditions);
   }
-
+  console.log(trialData)
   return trialData;
 };
 

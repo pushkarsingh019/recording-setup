@@ -9,7 +9,7 @@ const trialSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  side: {
+  distance: {
     type: String,
     required: true,
   },

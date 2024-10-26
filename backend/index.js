@@ -12,10 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
-const database =
-  "mongodb+srv://pushkar:fishrecording@cluster0.lz5tvs5.mongodb.net/recording";
-// const database =
-//   "mongodb+srv://pushkar:pushkar@cluster0.jurgdiv.mongodb.net/test";
+const database = "mongodb+srv://pushkars:cVIgCNgq1zmsiZjB@sri-cluster.ivbkc.mongodb.net/?retryWrites=true&w=majority&appName=sri-cluster"
+
 let trial = {};
 let fish;
 const resend = new Resend("re_PhfK19tv_NMR9oecUvtgxu97z7PNwWEa6");
@@ -24,7 +22,7 @@ const createNewTrialData = async () => {
   const trialData = new Trial({
     fish: trial.fish,
     stimulus: trial.stimulus,
-    side: trial.side,
+    distance : trial.distance,
     startTiming: trial.startTiming,
     endTiming: trial.endTiming,
     reactionTime: trial.reactionTime,
@@ -41,13 +39,13 @@ const createNewTrialData = async () => {
 };
 
 const getSignal = (stimulus, detection) => {
-  if (stimulus === "positive" && detection === "Detection") {
+  if (stimulus === "Yes" && detection === "Detection") {
     return "hit";
-  } else if (stimulus === "negative" && detection === "Detection") {
+  } else if (stimulus === "No" && detection === "Detection") {
     return "false alarm";
-  } else if (stimulus === "positive" && detection === "No Detection") {
+  } else if (stimulus === "Yes" && detection === "No Detection") {
     return "miss";
-  } else if (stimulus === "negative" && detection === "No Detection") {
+  } else if (stimulus === "No" && detection === "No Detection") {
     return "correct rejection";
   } else if (detection === "null") {
     return "null";
@@ -56,37 +54,8 @@ const getSignal = (stimulus, detection) => {
   }
 };
 
-const sendEmail = async () => {
-  const host = "https://elfish.stoicpushkar.com/";
-  let link = host + "data";
-  const { data, error } = await resend.batch.send([
-    {
-      from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-      to: ["pushkars423@gmail.com"],
-      subject: "Here is your data...",
-      html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
-    },
-    {
-      from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-      to: ["vanshika.m@ahduni.edu.in"],
-      subject: "Here is your data...",
-      html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
-    },
-    {
-      from: "Pushkar Singh <pushkar@contact.stoicpushkar.com>",
-      to: ["sridharshiny.k@ahduni.edu.in"],
-      subject: "Here is your data...",
-      html: `<h1> Here is your data </h1> <br /> <a href=${link} target="_blank">click to download your data</a>`,
-    },
-  ]);
-
-  if (error) {
-    console.log(error.message);
-  }
-};
 
 app.get("/", (req, res) => {
-  // sendEmail()
   res.send("The recording setup.");
 });
 
@@ -100,7 +69,7 @@ app.get("/trialData", (req, res) => {
   trial = { fish: fish };
   const trialData = getTrialData();
   trial.stimulus = trialData.stimulus;
-  trial.side = trialData.side;
+  trial.distance = trialData.distance;
   res.send(trialData);
 });
 
@@ -112,11 +81,8 @@ app.get("/start", (req, res) => {
     if (stderr) {
       console.log(`stderr ${stderr}`);
     }
-    // console.log(stdout)
     trial.startTiming = stdout;
   });
-  // const startTime = getCurrentTime();
-  // trial.startTiming = startTime;
   res.send("starting trial");
 });
 
@@ -135,9 +101,7 @@ app.get("/end", async (req, res) => {
     );
     trial.reactionTime = timeDifference;
   });
-  // const endTiming = getCurrentTime();
-  // trial.endTiming  = endTiming;
-  // console.log("start timing - end timing ", trial.startTiming, trial.endTiming)
+
   res.send("Got the end trial details....");
 });
 
@@ -148,8 +112,8 @@ app.get("/discard", (req, res) => {
 
 app.get("/detection/:detect", (req, res) => {
   const { detect } = req.params;
-  // 0 -> wrong detection
-  // 1 -> correct detection
+  // 0 -> FIS
+  // 1 -> DETECTION0
   // 2 -> no detection
   if (detect == 0) {
     trial.detection = "No Detection";
