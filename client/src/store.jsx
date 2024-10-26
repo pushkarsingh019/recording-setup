@@ -5,7 +5,7 @@ import { toast, Toaster } from "react-hot-toast";
 export const storeContext = createContext();
 
 export const ContextProvider = ({ children }) => {
-  const backendUrl = "http://localhost:8000";
+  const backendUrl = "http://10.20.65.7:8000";
   const [trialData, setTrialData] = useState();
   const [isTrialRunning, setIsTrialRunning] = useState(false);
   const [count, setCount] = useState(0);
@@ -26,10 +26,12 @@ export const ContextProvider = ({ children }) => {
       }
     },
     getTrialInfo: async () => {
+      console.log('in the trial function')
       try {
         const { data } = await axios.get(`${backendUrl}/trialData`);
         setTrialData(data);
         store.trialDataExists = true;
+        console.log(store.trialDataExists)
       } catch (error) {
         toast.error("could not get trial information");
       }
