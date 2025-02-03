@@ -13,6 +13,10 @@ const trialSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ballSize : {
+    type : String,
+    required : true
+  },
   startTiming: {
     type: String,
     required: true,

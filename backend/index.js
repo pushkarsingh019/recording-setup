@@ -16,11 +16,13 @@ const database = "mongodb+srv://pushkars:cVIgCNgq1zmsiZjB@sri-cluster.ivbkc.mong
 
 let trial = {};
 let fish;
+let ball;
 const resend = new Resend("re_PhfK19tv_NMR9oecUvtgxu97z7PNwWEa6");
 
 const createNewTrialData = async () => {
   const trialData = new Trial({
     fish: trial.fish,
+    ballSize : trial.ballSize,
     stimulus: trial.stimulus,
     distance : trial.distance,
     startTiming: trial.startTiming,
@@ -65,8 +67,15 @@ app.get("/fishNumber/:fishNumber", (req, res) => {
   res.send(fish);
 });
 
+app.get("/ballSize/:ballSize", (req, res) => {
+  const { ballSize } = req.params;
+  ball = ballSize
+  res.send(ballSize);
+});
+
 app.get("/trialData", (req, res) => {
-  trial = { fish: fish };
+  trial.fish = fish
+  trial.ballSize = ball
   const trialData = getTrialData();
   trial.stimulus = trialData.stimulus;
   trial.distance = trialData.distance;

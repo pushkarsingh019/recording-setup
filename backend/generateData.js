@@ -3,6 +3,7 @@ import path from 'path';
 import { createObjectCsvWriter } from 'csv-writer';
 
 import Trial from './database.js';
+import { title } from 'process';
 
 async function generateCsv(data) {
   try {
@@ -27,6 +28,7 @@ const csvWriter = createObjectCsvWriter({
     {id : "fish", title : "fish"},
     { id: 'stimulus', title: 'Stimulus' },
     { id: 'distance', title: 'Distance' },
+    { id : 'ballSize', title : "Ball Size"},
     { id: 'startTiming', title: 'Start Timing' },
     { id: 'endTiming', title: 'End Timing' },
     { id: 'reactionTime', title: 'Reaction Time (seconds)' },

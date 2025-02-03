@@ -12,6 +12,8 @@ const conditions = [
   {distance : 10, stimulus : 'No'},
   {distance : 12, stimulus : 'Yes'},
   {distance : 12, stimulus : 'No'},
+  {distance : 14, stimulus : "Yes"},
+  {distance : 14, stimulus : "No"},
 ];
 
 // Shuffle conditions randomly

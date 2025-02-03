@@ -25,6 +25,14 @@ export const ContextProvider = ({ children }) => {
         console.log(error.message);
       }
     },
+    setBall : async (ballSize) => {
+      try {
+        await axios.get(`${backendUrl}/ballSize/${ballSize}`);
+        setCount(0);
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
     getTrialInfo: async () => {
       console.log('in the trial function')
       try {
